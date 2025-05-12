@@ -53,3 +53,15 @@ def test_transfer_from_non_existing_account():
     reset_state()
     response = requests.post(f"{BASE_URL}/event", json={"type": "transfer", "origin": "200", "amount": 15, "destination": "300"})
     assert response.status_code == 404
+
+def test_get_account_status_non_existing_account():
+    reset_state()
+    response = requests.get(f"{BASE_URL}/account/status?account_id=1234")
+    assert response.status_code == 404
+    assert response.json() == {"status": "not_found"}
+
+def test_get_account_status_existing_account():
+    test_deposit_into_existing_account()
+    response = requests.get(f"{BASE_URL}/account/status?account_id=100")
+    assert response.status_code == 200
+    assert response.json() == {"status": "active", "account": {"id": "100", "balance": 20}}

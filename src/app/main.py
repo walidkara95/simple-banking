@@ -16,6 +16,14 @@ def get_balance(account_id: str, response: Response):
         response.status_code = status.HTTP_404_NOT_FOUND
         return 0
     return account.balance
+
+@app.get("/account/status")
+def get_account_status(account_id: str, response: Response):
+    account = core.get_account_balance(account_id)
+    if account is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"status": "not_found"}
+    return {"status": "active", "account": account}
     
 @app.post("/event", status_code=201)
 def post_event(transaction: Transaction, response: Response):
