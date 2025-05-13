@@ -19,12 +19,14 @@ def create_or_update_account(account_id: str, amount: int) -> Account:
     return accounts[account_id]
 
 def withdraw_from_account(account_id: str, amount: int) -> Optional[Account]:
-    if account_id not in accounts or accounts[account_id].balance < amount:
+    if account_id not in accounts:
+        return None
+    if accounts[account_id].balance < amount:
         return None
     accounts[account_id].balance -= amount
     return accounts[account_id]
 
-def transfer_between_accounts(origin: str, destination: str, amount: int) -> (Optional[Account], Optional[Account]):
+def transfer_between_accounts(origin: str, destination: str, amount: int) -> tuple[Optional[Account], Optional[Account]]:
     if origin not in accounts or accounts[origin].balance < amount:
         return None, None  
     
